@@ -31,8 +31,8 @@
                         
                         <div class="card-body">
                             <h5 class="card-title">Penulis : <?= $book_selected->AUTHOR; ?></h5>
-                            <p class="card-text mb-3">Judul : <?= $book_selected->JUDUL; ?></p>
-                            <p class="card-text mb-3 font-weight-bold">Rating : <?= $book_rating_selected; ?></p>
+                            <p class="card-text mb-3">Judul : <?= $book_selected->TITLE; ?></p>
+                            <p class="card-text mb-3 font-weight-bold">Peringkat : <?= $book_rating_selected; ?></p>
                         </div>
 
                     </div>
@@ -42,8 +42,8 @@
                 <div class="col-12 col-sm-12 col-md-9 col-lg-9 col-xl-9 mb-9">
                     <div class="card bg-light">
                         <div class="card-body">
-                            <p class="mb-3 font-weight-bold">Mean MAE : <?= $mean_MAE; ?></p>
-                            <p class="mb-3 font-weight-bold">Time Execution : <?= $time_execution; ?> microsecond</p>
+                            <p class="mb-3 font-weight-bold">Rata-rata MAE : <?= $mean_MAE; ?></p>
+                            <p class="mb-3 font-weight-bold">Waktu Eksekusi : <?= $time_execution; ?> microsecond</p>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
             <div class="row card-deck" id="myItems">
 
                 <?php foreach ($book_recommend as $book) : ?>
-                    <?php if ($book["book"]->ISBN != $book_selected->ISBN) : ?>
+                    <?php if ($book["book"]->BOOK_ID != $book_selected->BOOK_ID) : ?>
                     <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 mb-3">
                         
                         <div class="card" style="height: 500px;">
@@ -65,9 +65,9 @@
                             
                             <div class="card-body">
                                 <h5 class="card-title">Penulis : <?= $book["book"]->AUTHOR; ?></h5>
-                                <p class="card-text mb-3">Judul : <?= $book["book"]->JUDUL; ?></p>
-                                <p class="card-text mb-3 font-weight-bold"><?php if ($this->session->userdata('level') == 1) : ?>Rating Prediction<?php else: ?>Rating<?php endif; ?> : <?= $book["rating_predic"]; ?></p>
-                                <?php if ($this->session->userdata('level') == 1) : ?><p class="card-text mb-3 font-weight-bold">Rating Real : <?= $book["rating_real"]; ?></p><?php endif; ?>
+                                <p class="card-text mb-3">Judul : <?= $book["book"]->TITLE; ?></p>
+                                <p class="card-text mb-3 font-weight-bold"><?php if ($this->session->userdata('level') == 1) : ?>Pediksi<?php else: ?>Peringkat<?php endif; ?> : <?= $book["rating_predic"]; ?></p>
+                                <?php if ($this->session->userdata('level') == 1) : ?><p class="card-text mb-3 font-weight-bold">Asli : <?= $book["rating_real"]; ?></p><?php endif; ?>
                             </div>
 
                         </div>

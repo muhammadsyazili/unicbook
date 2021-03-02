@@ -11,7 +11,7 @@
 							<div class="col text-center">
 								<div class="home_slider_title">SISTEM REKOMENDASI BUKU</div>
 								<div class="home_slider_subtitle mb-3">Menggunakan Item-Based Clustering Hybrid Method (ICHM)</div>
-								<form action="<?= base_url('buku/search'); ?>" method="post">
+								<form action="<?= base_url('book/search'); ?>" method="post">
 
 									<div class="row">
 										<div class="col-12 col-sm-12 col-md-9 col-lg-9 col-xl-9">
@@ -21,8 +21,8 @@
 										<div class="col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
 											<div class="form-group">
 											<select class="form-control" name="filter">
-												<option value="1">Title</option>
-												<option value="2">Author</option>
+												<option value="title">Title</option>
+												<option value="author">Author</option>
 											</select>
 											</div>
 										</div>

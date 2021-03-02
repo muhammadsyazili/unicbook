@@ -7,10 +7,9 @@ class Cron extends CI_Controller
     {
         parent::__construct();
         $this->load->library('form_validation');
-        $this->load->model('data_buku_m');
-        $this->load->model('data_user_m');
-        $this->load->model('data_rating_m');
-        $this->load->model('data_hasil_m');
+        $this->load->model('bookModel');
+        $this->load->model('userModel');
+        $this->load->model('ratingModel');
     }
 
     public function index($id, $loop, $password)
@@ -22,10 +21,8 @@ class Cron extends CI_Controller
         }
     }
 
-    private function otomatic_job($id)
+    private function otomatic_job($book_id)
     {
-        $ISBN = $id;
-
         $start_compute = microtime(true);
         $this->create_dataset();
 
@@ -36,15 +33,15 @@ class Cron extends CI_Controller
         $this->load->library("kmeans", $data);
         $result = $this->kmeans->exec();
         
-        // mencari cluster berdasarkan ISBN yang dipilih
+        // mencari cluster berdasarkan BOOK_ID yang dipilih
         $cluster = 0;
         for ($i=0; $i < count($result); $i++) { 
-            if ($result[$i][1] == $ISBN) {
+            if ($result[$i][1] == $book_id) {
                 $cluster = $result[$i][0];
             }
         }
         
-        //seleksi data yang satu cluster dengan ISBN yang dipilih
+        //seleksi data yang satu cluster dengan BOOK_ID yang dipilih
         $iter = 0;
         for ($i=0; $i < count($result); $i++) {
             if ($result[$i][0] == $cluster) {
@@ -104,9 +101,9 @@ class Cron extends CI_Controller
 
         $rating_real_all_user = [];
         for ($i=0; $i < count($keysWithinSum); $i++) {
-            $users = $this->data_user_m->read(); 
+            $users = $this->userModel->read(); 
             for ($j=0; $j < count($users); $j++) { 
-                $rating_real_all_user[$i][$j] = $this->data_rating_m->readWhere(["data_rating.ISBN" => $keysWithinSum[$i], "data_rating.USER_ID" => $users[$j]->USER_ID]) == NULL ? 0 : $this->data_rating_m->readWhere(["data_rating.ISBN" => $keysWithinSum[$i], "data_rating.USER_ID" => $users[$j]->USER_ID])->RATING;
+                $rating_real_all_user[$i][$j] = $this->ratingModel->readWhere(["rates.BOOK_ID" => $keysWithinSum[$i], "rates.USER_ID" => $users[$j]->USER_ID]) == NULL ? 0 : $this->ratingModel->readWhere(["rates.BOOK_ID" => $keysWithinSum[$i], "rates.USER_ID" => $users[$j]->USER_ID])->RATE;
             }
         }
 
@@ -120,27 +117,27 @@ class Cron extends CI_Controller
         }
         $mean_MAE = $MAE / count($valuesWithoutSum);
 
-        $this->data_hasil_m->create(["data_hasil.MAE" => $mean_MAE, "data_hasil.TE" => $time_execution]);
+        $this->db->insert('results', ["data_hasil.MAE" => $mean_MAE, "data_hasil.TE" => $time_execution])->insert_id();
     }
 
     private function create_dataset()
     {
-        $books = $this->data_buku_m->read();
+        $books = $this->bookModel->read();
         for ($i = 0; $i < count($books); $i++) {
-            $this->datasetPathsBeforeKmeans[$i] = $books[$i]->ISBN;
-            $users = $this->data_user_m->read();
+            $this->datasetPathsBeforeKmeans[$i] = $books[$i]->BOOK_ID;
+            $users = $this->userModel->read();
             
             $status = 0;
             for ($j = 0; $j < count($users); $j++) {
                 if ($i == 0) $this->datasetUserBeforeKmeans[$users[$j]->USER_ID] = $j;
 
-                $result = $this->data_rating_m->readWhere(['data_rating.USER_ID' => $users[$j]->USER_ID, 'data_rating.ISBN' => $books[$i]->ISBN]);
+                $result = $this->ratingModel->readWhere(['rates.USER_ID' => $users[$j]->USER_ID, 'rates.BOOK_ID' => $books[$i]->BOOK_ID]);
 
                 if ($result == null) {
                     $this->datasetValuesBeforeKmeans[$i][$j] = 0;
                     $status++;
                 } else {
-                    $this->datasetValuesBeforeKmeans[$i][$j] = $result->RATING;
+                    $this->datasetValuesBeforeKmeans[$i][$j] = $result->RATE;
                 }
             }
 

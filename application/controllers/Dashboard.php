@@ -11,11 +11,12 @@ class Dashboard extends CI_Controller
 
     public function index()
     {
-        $data_header['title'] = 'Home';
+        $data_header['title'] = 'Dashboard';
         $data_header['backgroud'] = 'assets/bg.jpg';
-        $this->load->view('templates_administrator/header', $data_header);
-        $this->load->view('templates_administrator/sidebar');
-        $this->load->view('auth/dashboard');
-        $this->load->view('templates_administrator/footer');
+
+        $this->load->view('templates/header', $data_header);
+        $this->load->view('templates/sidebar');
+        $this->load->view('dashboard');
+        $this->load->view('templates/footer');
     }
 }

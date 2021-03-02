@@ -27,7 +27,7 @@
                 <button type="submit" class="btn btn-block btn-danger font-weight-bold">Save Rating</button>
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-3 mt-3">
-                        <input type="text" id="myFilter" class="form-control" onkeyup="myFunction()" placeholder="Search Book Name ...">
+                        <input type="text" id="myFilter" class="form-control" onkeyup="myFunction()" placeholder="Book Name ...">
                     </div>
                 </div>
                 <div class="row card-deck" id="myItems">
@@ -38,60 +38,60 @@
                                 <img class="card-img-top" src="<?= $book["URL_IMAGE_M"]; ?>" alt="Card image">
                                 <div class="card-body">
                                     <h5 class="card-title"><?= $book["AUTHOR"]; ?></h5>
-                                    <p class="card-text mb-3"><?= $book["JUDUL"]; ?></p>
+                                    <p class="card-text mb-3"><?= $book["TITLE"]; ?></p>
 
                                     <label for="">rating</label>
                                     <br>
-                                    <input type="hidden" name="id[]" value="<?= $book["ISBN"]; ?>">
+                                    <input type="hidden" name="id[]" value="<?= $book["BOOK_ID"]; ?>">
 
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 1) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="1">1
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 1) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="1">1
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 2) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="2">2
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 2) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="2">2
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 3) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="3">3
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 3) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="3">3
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 4) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="4">4
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 4) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="4">4
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 5) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="5">5
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 5) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="5">5
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 6) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="6">6
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 6) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="6">6
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 7) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="7">7
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 7) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="7">7
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 8) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="8">8
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 8) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="8">8
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 9) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="9">9
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 9) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="9">9
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" <?php if ($book["RATING"] == 10) : ?>checked<?php endif; ?> name="rating_value_<?= $book["ISBN"]; ?>" value="10">10
+                                            <input type="radio" class="form-check-input" <?php if ($book["RATE"] == 10) : ?>checked<?php endif; ?> name="rating_value_<?= $book["BOOK_ID"]; ?>" value="10">10
                                         </label>
                                     </div>
                                 </div>

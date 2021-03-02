@@ -32,16 +32,16 @@
                         <div class="col-3 mb-3 mt-3">
                             
                             <div class="card" style="height: 500px;">
-                                <img class="card-img-top" src="<?= $book->URL_IMAGE_M; ?>" alt="Card image">
+                                <img class="card-img-top" src="<?= $book->URL_IMAGE_M; ?>" alt="Book Cover">
                                 
                                 <div class="card-body">
 
                                     <h5 class="card-title"><?= $book->AUTHOR; ?></h5>
-                                    <p class="card-text mb-3"><?= $book->JUDUL; ?></p>
+                                    <p class="card-text mb-3"><?= $book->TITLE; ?></p>
                                     
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="filter" value="<?= $book->ISBN; ?>">Select
+                                            <input type="radio" class="form-check-input" name="filter" value="<?= $book->BOOK_ID; ?>">Select
                                         </label>
                                     </div>
                                 </div>

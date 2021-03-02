@@ -6,9 +6,9 @@ class Rating extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('data_buku_m');
-        $this->load->model('data_rating_m');
-        $this->load->model('data_user_m');
+        $this->load->model('bookModel');
+        $this->load->model('userModel');
+        $this->load->model('ratingModel');
 
         $this->load->library('form_validation');
         if ($this->session->userdata('is_login') == false) redirect('auth');
@@ -16,42 +16,42 @@ class Rating extends CI_Controller
 
     public function deleteRatingNotRelation()
     {
-        $rating = $this->data_rating_m->read();
+        $rating = $this->ratingModel->read();
         for ($i = 0; $i < count($rating); $i++) {
-            if ($this->data_buku_m->count(["data_buku.ISBN" => $rating[$i]->ISBN]) == 0) {
-                $this->data_rating_m->delete(["data_rating.ID_RATING" => $rating[$i]->ID_RATING]);
+            if ($this->bookModel->count(["books.BOOK_ID" => $rating[$i]->BOOK_ID]) == 0) {
+                $this->ratingModel->delete(["rates.RATE_ID" => $rating[$i]->RATE_ID]);
             }
         }
     }
 
     public function deleteUserUnder50()
     {
-        $users = $this->data_user_m->read();
+        $users = $this->userModel->read();
         for ($i = 0; $i < count($users); $i++) {
-            if ($this->data_rating_m->count(["data_rating.USER_ID" => $users[$i]->USER_ID]) <= 50) {
-                $this->data_user_m->delete(["data_user.USER_ID" => $users[$i]->USER_ID]);
+            if ($this->ratingModel->count(["rates.USER_ID" => $users[$i]->USER_ID]) <= 50) {
+                $this->userModel->delete(["users.USER_ID" => $users[$i]->USER_ID]);
             }
         }
     }
 
     public function deleteUserNeverRating()
     {
-        $users = $this->data_user_m->read();
+        $users = $this->userModel->read();
         for ($i = 0; $i < count($users); $i++) {
-            if ($this->data_rating_m->count(["data_rating.USER_ID" => $users[$i]->USER_ID]) == 0) {
-                $this->data_user_m->delete(["data_user.USER_ID" => $users[$i]->USER_ID]);
+            if ($this->ratingModel->count(["rates.USER_ID" => $users[$i]->USER_ID]) == 0) {
+                $this->userModel->delete(["users.USER_ID" => $users[$i]->USER_ID]);
             }
         }
     }
 
     public function createOtomaticRating()
     {
-        $users = $this->data_user_m->read();
+        $users = $this->userModel->read();
         for ($i = 0; $i < count($users); $i++) {
-            $books = $this->data_buku_m->read();
+            $books = $this->bookModel->read();
             for ($j=0; $j < count($books); $j++) { 
-                if ($this->data_rating_m->count(["data_rating.USER_ID" => $users[$i]->USER_ID, 'data_rating.ISBN' => $books[$j]->ISBN]) == 0) {
-                    $this->data_rating_m->create(["data_rating.USER_ID" => $users[$i]->USER_ID, 'data_rating.ISBN' => $books[$j]->ISBN, 'data_rating.RATING' => rand(8, 10)]);
+                if ($this->ratingModel->count(["rates.USER_ID" => $users[$i]->USER_ID, 'rates.BOOK_ID' => $books[$j]->BOOK_ID]) == 0) {
+                    $this->ratingModel->create(["rates.USER_ID" => $users[$i]->USER_ID, 'rates.BOOK_ID' => $books[$j]->BOOK_ID, 'rates.RATE' => rand(8, 10)]);
                 }
             }
         }
@@ -59,12 +59,12 @@ class Rating extends CI_Controller
 
     public function createOtomaticRatingNewBook()
     {
-        $books = $this->data_buku_m->read();
+        $books = $this->bookModel->read();
         for ($i=0; $i < count($books); $i++) {
-            if ($this->data_rating_m->count(['data_rating.ISBN' => $books[$i]->ISBN]) == 0) {
-                $users = $this->data_user_m->read();
+            if ($this->ratingModel->count(['rates.BOOK_ID' => $books[$i]->BOOK_ID]) == 0) {
+                $users = $this->userModel->read();
                 for ($j=0; $j < count($users); $j++) { 
-                    $this->data_rating_m->create(["data_rating.USER_ID" => $users[$j]->USER_ID, 'data_rating.ISBN' => $books[$i]->ISBN, 'data_rating.RATING' => rand(1, 10)]);
+                    $this->ratingModel->create(["rates.USER_ID" => $users[$j]->USER_ID, 'rates.BOOK_ID' => $books[$i]->BOOK_ID, 'rates.RATE' => rand(1, 10)]);
                 }
             } 
         }
@@ -72,12 +72,12 @@ class Rating extends CI_Controller
 
     public function createOtomaticRatingNewUser()
     {
-        $users = $this->data_user_m->read();
+        $users = $this->userModel->read();
         for ($i = 0; $i < count($users); $i++) {
-            if ($this->data_rating_m->count(["data_rating.USER_ID" => $users[$i]->USER_ID]) == 0) {
-                $books = $this->data_buku_m->read();
+            if ($this->ratingModel->count(["rates.USER_ID" => $users[$i]->USER_ID]) == 0) {
+                $books = $this->bookModel->read();
                 for ($j=0; $j < count($books); $j++) { 
-                    $this->data_rating_m->create(["data_rating.USER_ID" => $users[$i]->USER_ID, 'data_rating.ISBN' => $books[$j]->ISBN, 'data_rating.RATING' => rand(1, 10)]);
+                    $this->ratingModel->create(["rates.USER_ID" => $users[$i]->USER_ID, 'rates.BOOK_ID' => $books[$j]->BOOK_ID, 'rates.RATE' => rand(1, 10)]);
                 }
             }
         }
@@ -86,38 +86,38 @@ class Rating extends CI_Controller
     public function multiple_create()
     {
         if (count($this->input->post("id")) == 0) {
-            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert"> You should rate first !</div>');
-            redirect('buku');
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">You should rate first !</div>');
+            redirect('book');
         } else {
             for ($i = 0; $i < count($this->input->post("id")); $i++) {
                 $rating_name = sprintf("rating_value_%s", $this->input->post("id")[$i]);
 
                 if ($this->input->post($rating_name) != null) {
 
-                    $result = $this->data_rating_m->readWhere(["data_rating.ISBN" => $this->input->post("id")[$i], "data_rating.USER_ID" => $this->session->userdata("user")]);
+                    $result = $this->ratingModel->readWhere(["rates.BOOK_ID" => $this->input->post("id")[$i], "rates.USER_ID" => $this->session->userdata("user")]);
     
                     if ($result == NULL) {
-                        $this->data_rating_m->create([
+                        $this->ratingModel->create([
                             "USER_ID" => $this->session->userdata("user"),
-                            "ISBN" => $this->input->post("id")[$i],
-                            "RATING" => $this->input->post($rating_name)
+                            "BOOK_ID" => $this->input->post("id")[$i],
+                            "RATE" => $this->input->post($rating_name)
                         ]);
                     } else {
-                        $this->data_rating_m->update(
+                        $this->ratingModel->update(
                             [
                                 "USER_ID" => $this->session->userdata("user"),
-                                "ISBN" => $this->input->post("id")[$i],
-                                "RATING" => $this->input->post($rating_name)
+                                "BOOK_ID" => $this->input->post("id")[$i],
+                                "RATE" => $this->input->post($rating_name)
                             ],
                             [
-                                "ID_RATING" => $result->ID_RATING
+                                "RATE_ID" => $result->RATE_ID
                             ]
                         );
                     }
                 }
             }
-            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert"> Congratulation your rating have been saved</div>');
-            redirect('buku');
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Congratulation your rates have been saved</div>');
+            redirect('book');
         }
     }
 
