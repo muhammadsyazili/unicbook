@@ -14,37 +14,7 @@ class Rating extends CI_Controller
         if ($this->session->userdata('is_login') == false) redirect('auth');
     }
 
-    public function deleteRatingNotRelation()
-    {
-        $rating = $this->ratingModel->read();
-        for ($i = 0; $i < count($rating); $i++) {
-            if ($this->bookModel->count(["books.BOOK_ID" => $rating[$i]->BOOK_ID]) == 0) {
-                $this->ratingModel->delete(["rates.RATE_ID" => $rating[$i]->RATE_ID]);
-            }
-        }
-    }
-
-    public function deleteUserUnder50()
-    {
-        $users = $this->userModel->read();
-        for ($i = 0; $i < count($users); $i++) {
-            if ($this->ratingModel->count(["rates.USER_ID" => $users[$i]->USER_ID]) <= 50) {
-                $this->userModel->delete(["users.USER_ID" => $users[$i]->USER_ID]);
-            }
-        }
-    }
-
-    public function deleteUserNeverRating()
-    {
-        $users = $this->userModel->read();
-        for ($i = 0; $i < count($users); $i++) {
-            if ($this->ratingModel->count(["rates.USER_ID" => $users[$i]->USER_ID]) == 0) {
-                $this->userModel->delete(["users.USER_ID" => $users[$i]->USER_ID]);
-            }
-        }
-    }
-
-    public function createOtomaticRating()
+    public function automaticRating()
     {
         $users = $this->userModel->read();
         for ($i = 0; $i < count($users); $i++) {
@@ -52,32 +22,6 @@ class Rating extends CI_Controller
             for ($j=0; $j < count($books); $j++) { 
                 if ($this->ratingModel->count(["rates.USER_ID" => $users[$i]->USER_ID, 'rates.BOOK_ID' => $books[$j]->BOOK_ID]) == 0) {
                     $this->ratingModel->create(["rates.USER_ID" => $users[$i]->USER_ID, 'rates.BOOK_ID' => $books[$j]->BOOK_ID, 'rates.RATE' => rand(8, 10)]);
-                }
-            }
-        }
-    }
-
-    public function createOtomaticRatingNewBook()
-    {
-        $books = $this->bookModel->read();
-        for ($i=0; $i < count($books); $i++) {
-            if ($this->ratingModel->count(['rates.BOOK_ID' => $books[$i]->BOOK_ID]) == 0) {
-                $users = $this->userModel->read();
-                for ($j=0; $j < count($users); $j++) { 
-                    $this->ratingModel->create(["rates.USER_ID" => $users[$j]->USER_ID, 'rates.BOOK_ID' => $books[$i]->BOOK_ID, 'rates.RATE' => rand(1, 10)]);
-                }
-            } 
-        }
-    }
-
-    public function createOtomaticRatingNewUser()
-    {
-        $users = $this->userModel->read();
-        for ($i = 0; $i < count($users); $i++) {
-            if ($this->ratingModel->count(["rates.USER_ID" => $users[$i]->USER_ID]) == 0) {
-                $books = $this->bookModel->read();
-                for ($j=0; $j < count($books); $j++) { 
-                    $this->ratingModel->create(["rates.USER_ID" => $users[$i]->USER_ID, 'rates.BOOK_ID' => $books[$j]->BOOK_ID, 'rates.RATE' => rand(1, 10)]);
                 }
             }
         }
